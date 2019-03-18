@@ -1,0 +1,171 @@
+00:40 15/03/2019
+
+// --------------------------------------------------------------------------------
+// Instalação do Laravel 5.6
+// --------------------------------------------------------------------------------
+https://laravel.com/docs/5.6
+
+Instalar o Laravel escolhendo uma versão específica:
+composer create-project --prefer-dist laravel/laravel blog "5.6.*"
+
+Rodar o server do Laravel:
+php artisan serve
+
+
+// --------------------------------------------------------------------------------
+// 13 Rotas
+// --------------------------------------------------------------------------------
+
+Ver toas as rotas existentes:
+php artisan route:list
+
+Resultado no CMD:
++--------+----------+----------------------------+------+---------+--------------+
+| Domain | Method   | URI                        | Name | Action  | Middleware   |
++--------+----------+----------------------------+------+---------+--------------+
+|        | GET|HEAD | /                          |      | Closure | web          |
+|        | GET|HEAD | api/user                   |      | Closure | api,auth:api |
++--------+----------+----------------------------+------+---------+--------------+
+
+Route::get('/', function () {
+    return view('welcome'); -----------------------------------| chama uma view
+});
+
+Route::get('/ola', function () {
+    return "<h1>Seja bem vindo!!</h1>";
+});
+
+
+// ---------------------------------------------------------------------------
+// 14 Passar parâmetros para as rotas:
+// ---------------------------------------------------------------------------
+
+// Params restringidos
+Route::get('/seunomecomregra/{nome}/{n}', function($nome, $n) {
+    for($i=0; $i<$n; $i++) {
+        echo "<h1>Olá, $nome: $i </h1>";
+    }    
+})->where('n', '[0-9]+')->where('nome', '[A-Za-z]+');
+
+// Sem restrição (param opcional)
+Route::get('/seunomesemregra/{nome?}', function($nome=null) { // ----------------------| a interrogacao torna o param opcional
+    if(isset($nome)) {
+        echo "<h1>Olá, $nome";
+    } else
+        echo "Voce não passou nenhum nome";
+})->where('n', '[0-9]+')->where('nome', '[A-Za-z]+');
+
+
+// ---------------------------------------------------------------------------
+// 14 Agrupamento e rotas
+// ---------------------------------------------------------------------------
+
+Route::prefix('app')->group(function() {
+    Route::get('/', function() {
+       return "Págine principal do APP";
+    });
+    Route::get('/profile', function() {
+        return "Págine profile  do APP";
+    });
+    Route::get('/about', function() {
+        return "Págine ABOUT do APP";
+    });
+});
+
+php artisan route:list
++--------+----------+----------------------------+------+---------+--------------+
+| Domain | Method   | URI                        | Name | Action  | Middleware   |
++--------+----------+----------------------------+------+---------+--------------+
+|        | GET|HEAD | /                          |      | Closure | web          |
+|        | GET|HEAD | api/user                   |      | Closure | api,auth:api |
+|        | GET|HEAD | app                        |      | Closure | web          |
+|        | GET|HEAD | app/about                  |      | Closure | web          |
+|        | GET|HEAD | app/profile                |      | Closure | web          |
+|        | GET|HEAD | nome/{nome}/{sobrenome}    |      | Closure | web          |
+|        | GET|HEAD | ola                        |      | Closure | web          |
+|        | GET|HEAD | ola/sejabemvindo           |      | Closure | web          |
+|        | GET|HEAD | repetir/{nome}/{n}         |      | Closure | web          |
+|        | GET|HEAD | seunomecomregra/{nome}/{n} |      | Closure | web          |
+|        | GET|HEAD | seunomesemregra/{nome?}    |      | Closure | web          |
++--------+----------+----------------------------+------+---------+--------------+
+
+
+// ---------------------------------------------------------------------------
+// 17 Métodos HTTP :: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Methods
+// ---------------------------------------------------------------------------
+
+O protocolo HTTP define um conjunto de métodos de requisição responsáveis por indicar a ação a ser executada para um dado recurso. Embora esses métodos possam ser descritos como substantivos, eles também são comumente referenciados como HTTP Verbs (Verbos HTTP). Cada um deles implementa uma semântica diferente, mas alguns recursos são compartilhados por um grupo deles, como por exemplo, qualquer método de requisição pode ser do tipo safe, idempotent ou cacheable.
+
+# GET
+O método GET solicita a representação de um recurso específico. Requisições utilizando o método GET devem retornar apenas dados.
+
+# HEAD
+ O método HEAD solicita uma resposta de forma idêntica ao método GET, porém sem conter o corpo da resposta.
+
+# POST
+O método POST é utilizado para submeter uma entidade a um recurso específico, frequentemente causando uma mudança no estado do recurso ou efeitos colaterais no servidor.
+
+# PUT
+O método PUT substitui todas as atuais representações do recurso de destino pela carga de dados da requisição.
+
+# DELETE
+O método DELETE remove um recurso específico.
+
+# CONNECT
+O método CONNECT estabelece um túnel para o servidor identificado pelo recurso de destino.
+
+# OPTIONS
+O método OPTIONS é usado para descrever as opções de comunicação com o recurso de destino.
+
+# TRACE
+O método TRACE executa um teste de chamada loop-back junto com o caminho para o recurso de destino.
+
+# PATCH
+O método PATCH é utilizado para aplicar modificações parciais em um recurso.
+
+
+=> Instalação da extensão do Google Chrome "Advanced REST Clien" by advancedrestclient.com
+Acessar :: chrome://apps (no navegador e escolher o ARC)
+
+LISTAS DE STATUS HTTP
+- https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Status
+- https://pt.wikipedia.org/wiki/Lista_de_c%C3%B3digos_de_estado_HTTP
+- https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+
+POST ::
+    Ao tentar enviar por post, recebemos um erro 419. Isto se dá por conta do Laravel. Para solucionar, apenas para este exercício, isto precisa alterar o arquivo:
+    app >> Http >> Middleware >> VerifyCsrfToken.php
+    ...
+    protected $except = [
+        '/rest*'
+    ];
+    ...
+    
+php artisan Route:list
++--------+----------------------------------------+------------------------------+------+---------------------------------------+--------------+
+| Domain | Method                                 | URI                          | Name | Action                                | Middleware   |
++--------+----------------------------------------+------------------------------+------+---------------------------------------+--------------+
+|        | GET|HEAD                               | /                            |      | Closure                               | web          |
+|        | GET|HEAD                               | api/user                     |      | Closure                               | api,auth:api |
+|        | GET|HEAD                               | app                          |      | Closure                               | web          |
+|        | GET|HEAD                               | app/about                    |      | Closure                               | web          |
+|        | GET|HEAD                               | app/profile                  |      | Closure                               | web          |
+|        | GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS | aqui                         |      | Illuminate\Routing\RedirectController | web          |
+|        | GET|HEAD                               | hello                        |      | Illuminate\Routing\ViewController     | web          |
+|        | GET|HEAD                               | hellonome/{nome}/{sobrenome} |      | Closure                               | web          |
+|        | GET|HEAD                               | nome/{nome}/{sobrenome}      |      | Closure                               | web          |
+|        | GET|HEAD                               | ola                          |      | Closure                               | web          |
+|        | GET|HEAD                               | ola/sejabemvindo             |      | Closure                               | web          |
+|        | GET|HEAD                               | repetir/{nome}/{n}           |      | Closure                               | web          |
+|        | GET|HEAD                               | rest/hello                   |      | Closure                               | web          |
+|        | POST                                   | rest/hello                   |      | Closure                               | web          |
+|        | DELETE                                 | rest/hello                   |      | Closure                               | web          |
+|        | PUT                                    | rest/hello                   |      | Closure                               | web          |
+|        | PATCH                                  | rest/hello                   |      | Closure                               | web          |
+|        | OPTIONS                                | rest/hello                   |      | Closure                               | web          |
+|        | GET|HEAD                               | seunomecomregra/{nome}/{n}   |      | Closure                               | web          |
+|        | GET|HEAD                               | seunomesemregra/{nome?}      |      | Closure                               | web          |
+|        | GET|HEAD                               | viewnome                     |      | Illuminate\Routing\ViewController     | web          |
++--------+----------------------------------------+------------------------------+------+---------------------------------------+--------------+
+
+
