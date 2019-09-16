@@ -1,5 +1,5 @@
 <?php
-
+ use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,7 +45,7 @@ Route::get('/repetir/{nome}/{n}', function($nome, $n) {
 Route::get('/seunomecomregra/{nome}/{n}', function($nome, $n) {
     for($i=0; $i<$n; $i++) {
         echo "<h1>Olá, $nome: $i </h1>";
-    }    
+    }
 })->where('n', '[0-9]+')->where('nome', '[A-Za-z]+');
 
 // Sem restrição (param opcional)
@@ -117,4 +117,60 @@ Route::patch('/rest/hello', function() {
 
 Route::options('/rest/hello', function() {
     return "Hello (OPTIONS)";
+});
+
+// ---------------------------------------------------------------------------
+// 19 Requisições HTTP | Passar um parametro para uma rota nao GET
+// ---------------------------------------------------------------------------
+// Como passar um parametro para uma rota que nao seja o GET?
+// Na requisicao que enviamos, podemos passar param através do form-data
+// Precisa adicionar a biblioteca Request: use Illuminate\Http\Request;
+// usar o método POST neste enereço: http://localhost:8000/rest/imprimir
+Route::post('/rest/imprimir', function(Request $req) {
+    $nome = $req->input('nome');
+    $idade = $req->input('idade');
+    return "Hello $nome ($idade)!! (POST)";
+});
+
+// ---------------------------------------------------------------------------
+// 20 Requisi?es HTTP | Agrupamento métodos em uma mesma regra
+// ---------------------------------------------------------------------------
+
+// Atender o GET e o POST numa mesma regra.
+// match() ::
+// - vai ser os métodos que vamos atender nessa requisição
+// - vai configurar para a rota /rest/hello2
+// - na function() estipula o que irá fazer
+
+Route::match(['get', 'post'], '/rest/hello2', function(){
+	return 'Hello World 2';
+});
+
+// O uso do any indica que irá atender a qualquer método HTTP
+Route::any('/rest/hello3', function(){
+	return 'Hello World 3';
+});
+
+// ---------------------------------------------------------------------------
+// 21 Nomeando Rotas
+// ---------------------------------------------------------------------------
+
+Route::get('/produtos', function(){
+    echo '<h1>Produtos</h1>';
+    echo '<ol>';
+    echo '<li>Notebook</li>';
+    echo '<li>Impressor/</li>';
+    echo '<li>Mouse</li>';
+    echo '</ol>';
+})->name('meusprodutos');
+
+// Exemplo de um conteúdo que irá chamar a rota meusprodutos
+Route::get('linkprodutos', function() {
+    $url = route('meusprodutos');
+    echo "<a href=\"" . $url . "\">Meus produtos</a>";
+});
+
+// Redirecionar
+Route::get('/redirecionarprodutos', function() {
+    return redirect()->route('meusprodutos');
 });

@@ -1,19 +1,85 @@
-00:40 15/03/2019
+Ôªø00:40 15/03/2019
 
 // --------------------------------------------------------------------------------
-// InstalaÁ„o do Laravel 5.6
+// Instala√ß√£o do Laravel 5.6
 // --------------------------------------------------------------------------------
 https://laravel.com/docs/5.6
+https://laravel.com/docs/5.8
 
-Instalar o Laravel escolhendo uma vers„o especÌfica:
+# Via Composer Create-Project
+
+composer create-project --prefer-dist laravel/laravel blog
+
+Instalar o Laravel escolhendo uma vers√£o espec√≠fica:
 composer create-project --prefer-dist laravel/laravel blog "5.6.*"
+
+# Via Laravel Installer (maneira mais simples)
+Passo 1:
+composer global require laravel/installer
+
+Passo 2:
+incluir o seguinte caminho no Path do Windows:
+%USERPROFILE%\AppData\Roaming\Composer\vendor\bin
+
+Passo 3:
+Ap√≥s a instala√ß√£o do instalador e inclus√£o no Path, basta fazer o comando:
+lavarel new nome-projeto
 
 Rodar o server do Laravel:
 php artisan serve
+O projeto ficar√° dispon√≠vel no caminho: http://127.0.0.1:8000/
+
+-----------------------------------------------------
+
+Comandos importantes:
+COMANDO 									DESCRICAO
+composer dump-autoload						Dumps the autoloader
+composer install							Rebuild vendor folder
+php artisan make:controller Nome 			Create a new controller class
+
+// --------------------------------------------------------------------------------
+// 4 Config de VirtualHost
+// --------------------------------------------------------------------------------
+XAMPP: xampp ¬ª apache ¬ª conf ¬ª extra ¬ª httpd-vhosts.conf
+Windows: C:\Windows\System32\drivers\etc\hosts
+
+No arquivo do XAMPP deve adicionar:
+
+<VirtualHost *:80>
+    DocumentRoot "C:\xampp\htdocs\projeto-laravel\public"
+    ServerName teste-laravel.com
+	DirectoryIndex index.php
+	<Directory "C:\xampp\htdocs\projeto-laravel\public">
+		Options All
+		AllowOverride All
+		Order Allow,Deny
+		Allow from all
+	</Directory>
+</VirtualHost>
+
+No arquivo do Windows (host), adicionar o IP e o nome do ServerName
+127.0.0.1	teste-laravel.com
 
 
 // --------------------------------------------------------------------------------
-// 13 Rotas
+// 5 Instala√ß√£o do Redis xxx (ver este cap√≠tulo novamente)
+// --------------------------------------------------------------------------------
+
+Instala√ß√£o do Docker
+https://hub.docker.com/editions/community/docker-ce-desktop-windows
+
+// --------------------------------------------------------------------------------
+// 9 IDE Visual Studio Code e Extensions
+// --------------------------------------------------------------------------------
+
+Indica√ß√£o de 4 extens√µes:
+- DotENV (mikestead)
+- Laravel 5 Snippets (Winnie Lin)
+- Laravel Blade Snippets (Winnie Lin)
+- PHP Intelephense (Ben Mewburn)
+
+// --------------------------------------------------------------------------------
+// 11 (antigo 13) Rotas
 // --------------------------------------------------------------------------------
 
 Ver toas as rotas existentes:
@@ -37,22 +103,22 @@ Route::get('/ola', function () {
 
 
 // ---------------------------------------------------------------------------
-// 14 Passar par‚metros para as rotas:
+// 14 Passar par√¢metros para as rotas:
 // ---------------------------------------------------------------------------
 
-// Params restringidos
+// Params restringidos | Rotas com regras
 Route::get('/seunomecomregra/{nome}/{n}', function($nome, $n) {
     for($i=0; $i<$n; $i++) {
-        echo "<h1>Ol·, $nome: $i </h1>";
+        echo "<h1>Ol? $nome: $i </h1>";
     }    
 })->where('n', '[0-9]+')->where('nome', '[A-Za-z]+');
 
-// Sem restriÁ„o (param opcional)
+// Sem restri√ß√£o (param opcional)
 Route::get('/seunomesemregra/{nome?}', function($nome=null) { // ----------------------| a interrogacao torna o param opcional
     if(isset($nome)) {
-        echo "<h1>Ol·, $nome";
+        echo "<h1>Ol? $nome";
     } else
-        echo "Voce n„o passou nenhum nome";
+        echo "Voce n? passou nenhum nome";
 })->where('n', '[0-9]+')->where('nome', '[A-Za-z]+');
 
 
@@ -62,13 +128,13 @@ Route::get('/seunomesemregra/{nome?}', function($nome=null) { // ---------------
 
 Route::prefix('app')->group(function() {
     Route::get('/', function() {
-       return "P·gine principal do APP";
+       return "P?ine principal do APP";
     });
     Route::get('/profile', function() {
-        return "P·gine profile  do APP";
+        return "P?ine profile  do APP";
     });
     Route::get('/about', function() {
-        return "P·gine ABOUT do APP";
+        return "P?ine ABOUT do APP";
     });
 });
 
@@ -91,40 +157,40 @@ php artisan route:list
 
 
 // ---------------------------------------------------------------------------
-// 17 MÈtodos HTTP :: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Methods
+// 17 M√©odos HTTP :: https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Methods
 // ---------------------------------------------------------------------------
 
-O protocolo HTTP define um conjunto de mÈtodos de requisiÁ„o respons·veis por indicar a aÁ„o a ser executada para um dado recurso. Embora esses mÈtodos possam ser descritos como substantivos, eles tambÈm s„o comumente referenciados como HTTP Verbs (Verbos HTTP). Cada um deles implementa uma sem‚ntica diferente, mas alguns recursos s„o compartilhados por um grupo deles, como por exemplo, qualquer mÈtodo de requisiÁ„o pode ser do tipo safe, idempotent ou cacheable.
+O protocolo HTTP define um conjunto de m√©todos de requisi√ß√£o respons√°veis por indicar a a√ß√£o a ser executada para um dado recurso. Embora esses m√©todos possam ser descritos como substantivos, eles tamb√©m s√£o comumente referenciados como HTTP Verbs (Verbos HTTP). Cada um deles implementa uma sem?tica diferente, mas alguns recursos s√£o compartilhados por um grupo deles, como por exemplo, qualquer m√©todo de requisi?o pode ser do tipo safe, idempotent ou cacheable.
 
 # GET
-O mÈtodo GET solicita a representaÁ„o de um recurso especÌfico. RequisiÁıes utilizando o mÈtodo GET devem retornar apenas dados.
+O m√©todo GET solicita a representa?o de um recurso espec?ico. Requisi?es utilizando o m√©todo GET devem retornar apenas dados.
 
 # HEAD
- O mÈtodo HEAD solicita uma resposta de forma idÍntica ao mÈtodo GET, porÈm sem conter o corpo da resposta.
+ O m√©todo HEAD solicita uma resposta de forma id?tica ao m√©todo GET, por? sem conter o corpo da resposta.
 
 # POST
-O mÈtodo POST È utilizado para submeter uma entidade a um recurso especÌfico, frequentemente causando uma mudanÁa no estado do recurso ou efeitos colaterais no servidor.
+O m√©todo POST ?utilizado para submeter uma entidade a um recurso espec?ico, frequentemente causando uma mudan? no estado do recurso ou efeitos colaterais no servidor.
 
 # PUT
-O mÈtodo PUT substitui todas as atuais representaÁıes do recurso de destino pela carga de dados da requisiÁ„o.
+O m√©todo PUT substitui todas as atuais representa?es do recurso de destino pela carga de dados da requisi?o.
 
 # DELETE
-O mÈtodo DELETE remove um recurso especÌfico.
+O m√©todo DELETE remove um recurso espec?ico.
 
 # CONNECT
-O mÈtodo CONNECT estabelece um t˙nel para o servidor identificado pelo recurso de destino.
+O m√©todo CONNECT estabelece um t?nel para o servidor identificado pelo recurso de destino.
 
 # OPTIONS
-O mÈtodo OPTIONS È usado para descrever as opÁıes de comunicaÁ„o com o recurso de destino.
+O m√©odo OPTIONS ?usado para descrever as op?es de comunica√ß√£o com o recurso de destino.
 
 # TRACE
-O mÈtodo TRACE executa um teste de chamada loop-back junto com o caminho para o recurso de destino.
+O m√©todo TRACE executa um teste de chamada loop-back junto com o caminho para o recurso de destino.
 
 # PATCH
-O mÈtodo PATCH È utilizado para aplicar modificaÁıes parciais em um recurso.
+O m√©todo PATCH √© utilizado para aplicar modifica√ß√µes parciais em um recurso.
 
 
-=> InstalaÁ„o da extens„o do Google Chrome "Advanced REST Clien" by advancedrestclient.com
+=> Instala√ß√£o da extens√£o do Google Chrome "Advanced REST Clien" by advancedrestclient.com
 Acessar :: chrome://apps (no navegador e escolher o ARC)
 
 LISTAS DE STATUS HTTP
@@ -133,7 +199,7 @@ LISTAS DE STATUS HTTP
 - https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 
 POST ::
-    Ao tentar enviar por post, recebemos um erro 419. Isto se d· por conta do Laravel. Para solucionar, apenas para este exercÌcio, isto precisa alterar o arquivo:
+    Ao tentar enviar por post, recebemos um erro 419. Isto se d?por conta do Laravel. Para solucionar, apenas para este exerc?io, isto precisa alterar o arquivo:
     app >> Http >> Middleware >> VerifyCsrfToken.php
     ...
     protected $except = [
@@ -168,4 +234,121 @@ php artisan Route:list
 |        | GET|HEAD                               | viewnome                     |      | Illuminate\Routing\ViewController     | web          |
 +--------+----------------------------------------+------------------------------+------+---------------------------------------+--------------+
 
+
+// ---------------------------------------------------------------------------
+// 18 m√©todos HTTP - Parte 2 ::
+// ---------------------------------------------------------------------------
+
+POST com c?igo 419 - "The page has expired due to inactivity". Please refresh and try again.
+Na realidade isso ?uma prote?o do Laravel. Para alterar isso:
+app >> http >> middleware >> VeriryCsrfToken.php
+adicionar a rota dentro de $except. Ex:
+
+protected $except = [
+    '/rest*'
+];
+
+
+// ---------------------------------------------------------------------------
+// 19 Requisi?es HTTP | Passar um parametro para uma rota nao GET
+// ---------------------------------------------------------------------------
+
+Como passar um parametro para uma rota que nao seja o GET?
+Na requisicao que enviamos, podemos passar param atrav? do form-data
+Precisa adicionar a biblioteca Request: use Illuminate\Http\Request;
+usar o m√©todo POST neste enere?: http://localhost:8000/rest/imprimir
+
+Route::post('/rest/imprimir', function(Request $req) {
+    $nome = $req->input('nome');
+    $idade = $req->input('idade');
+    return "Hello $nome ($idade)!! (POST)";
+});
+
+// ---------------------------------------------------------------------------
+// 20 Requisi√ß√µes HTTP | Agrupamento m√©todos em uma mesma regra
+// ---------------------------------------------------------------------------
+
+Atender o GET e o POST numa mesma regra.
+match() ::
+- vai ser os m√©todos que vamos atender nessa requisi√ß√£o
+- vai configurar para a rota /rest/hello2
+- na function() estipula o que ir√° fazer
+
+Rout::match(['get', 'post'], '/rest/hello2', function(){
+	return
+});
+
+// ---------------------------------------------------------------------------
+// 21 Nomeando Rotas
+// ---------------------------------------------------------------------------
+
+Podemos nomear as rotas, assim, podemos alterar as rotas e usar sempre o mesmo name dado a ela.
+
+Route::get('/produtos', function(){
+    echo '<h1>Produtos</h1>';
+    echo '<ol>';
+    echo '<li>Notebook</li>';
+    echo '<li>Impressora</li>';
+    echo '<li>Mouse</li>';
+    echo '</ol>';
+})->name('meusprodutos');
+
+// Exemplo de um conte√∫do que ir√° chamar a rota meusprodutos
+Route::get('linkprodutos', function() {
+    $url = route('meusprodutos');
+    echo "<a href=\"" . $url . "\">Meus produtos</a>";
+});
+
+// Redirecionar
+Route::get('/redirecionarprodutos', function() {
+    return redirect()->route('meusprodutos');
+});
+
+// ---------------------------------------------------------------------------
+// SE√á√ÉO 5 Controladores | 23 MVC
+// ---------------------------------------------------------------------------
+
+Instala√ß√£o de novo projeto:
+composer create-project --prefer-dist laravel/laravel construtores
+
+Cria√ß√£o de Controller
+php artisan make:controller Nome
+
+# Controladores Resouce
+
+Cria√ß√£o de Controller com resources padr√µes
+php artisan make:controller ClienteControlador --resource
+
+Em routes >> web.php:
+Route::resource('/cliente', 'ClienteControlador');
+
+Fun√ß√µes criadas pelo comando --resource
+index() - listar os registros
+create() - apresentar form para adicionar novo registro
+store(req) - salvar o novo registo enviado pelo create()
+show(id) - getById
+edit(id) - apresenta um form para editar um registro espec√≠fico
+update(req) - salva a info do registo enviada pelo edit(id)
+destroy(id) - deleter um determinado registro
+
+Lista das rotas geradas atrav√©s deste comando:
+
+php artisan route:list
++--------+-----------+------------------------+-----------------+-------------------------------------------------+--------------+
+| Domain | Method    | URI                    | Name            | Action                                          | Middleware   |
++--------+-----------+------------------------+-----------------+-------------------------------------------------+--------------+
+|        | GET|HEAD  | /                      |                 | Closure                                         | web          |
+|        | GET|HEAD  | api/user               |                 | Closure                                         | api,auth:api |
+|        | GET|HEAD  | cliente                | cliente.index   | App\Http\Controllers\ClienteControlador@index   | web          |
+|        | POST      | cliente                | cliente.store   | App\Http\Controllers\ClienteControlador@store   | web          |
+|        | GET|HEAD  | cliente/create         | cliente.create  | App\Http\Controllers\ClienteControlador@create  | web          |
+|        | GET|HEAD  | cliente/{cliente}      | cliente.show    | App\Http\Controllers\ClienteControlador@show    | web          |
+|        | PUT|PATCH | cliente/{cliente}      | cliente.update  | App\Http\Controllers\ClienteControlador@update  | web          |
+|        | DELETE    | cliente/{cliente}      | cliente.destroy | App\Http\Controllers\ClienteControlador@destroy | web          |
+|        | GET|HEAD  | cliente/{cliente}/edit | cliente.edit    | App\Http\Controllers\ClienteControlador@edit    | web          |
+|        | GET|HEAD  | idade                  |                 | App\Http\Controllers\MeuControlador@getIdade    | web          |
+|        | GET|HEAD  | multiplicar/{n1}/{n2}  |                 | App\Http\Controllers\MeuControlador@multiplicar | web          |
+|        | GET|HEAD  | nome                   |                 | App\Http\Controllers\MeuControlador@getNome     | web          |
+|        | GET|HEAD  | nomes/{id}             |                 | App\Http\Controllers\MeuControlador@getNomeByID | web          |
++--------+-----------+------------------------+-----------------+-------------------------------------------------+--------------+
 
