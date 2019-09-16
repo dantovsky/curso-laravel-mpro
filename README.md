@@ -1,4 +1,4 @@
-# Laravel 5.6 Completo - O mais poderoso Framework PHP (Udemy)
+# Laravel 5.8 Completo - O mais poderoso Framework PHP (Udemy)
 https://www.udemy.com/laravelcompleto/
 
 Assuntos :: Eloquent ORM, relacionamentos, integração com Angular, autenticação, filas de emails, cache com Redis e muito mais
